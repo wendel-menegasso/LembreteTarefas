@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <field>
+        <name>category</name>
+        <size>30</size>
+        <order>1</order>
+    </field>
+    <field>
+        <name>frequency</name>
+        <size>30</size>
+        <order>2</order>
+    </field>
+    <field>
+        <name>time</name>
+        <size>20</size>
+        <order>3</order>
+    </field>
+    <field>
+        <name>name</name>
+        <size>30</size>
+        <order>4</order>
+    </field>
+    <field>
+        <name>descriptionTask</name>
+        <size>100</size>
+        <order>5</order>
+    </field>
+    <field>
+        <name>idTask</name>
+        <size>10</size>
+        <order>6</order>
+    </field>
+
+</schema>

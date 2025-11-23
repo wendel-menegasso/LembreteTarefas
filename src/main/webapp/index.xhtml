@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Cadastro de Tarefa</title>
+</h:head>
+<h:body>
+    <h:form>
+        <p:tabView dynamic="true" cache="false">
+            <p:ajax event="tabChange" listener="#{taskJSFBean.onTabChange}" update="@this" />
+            <p:tab title="Incluir">
+                <h2>Cadastro de Tarefa</h2>
+
+                <h:outputLabel for="nome" value="Nome da Tarefa:"/>
+                <h:inputText id="nome" value="#{taskJSFBean.name}" required="true"/>
+                <br/><br/>
+
+                <h:outputLabel for="descricao" value="Descrição:"/>
+                <h:inputTextarea id="descricao" value="#{taskJSFBean.description}" rows="4" cols="40"/>
+                <br/><br/>
+
+                <h:outputLabel for="horario" value="Horário:"/>
+                <h:inputText id="horario" value="#{taskJSFBean.time}"/>
+                <br/><br/>
+
+                <h:outputLabel for="frequency" value="Periodical:"/>
+                <h:selectOneMenu id="frequency" value="#{taskJSFBean.frequency}">
+                    <f:selectItem itemLabel="Selecione" itemValue=""/>
+                    <f:selectItem itemLabel="Diárias" itemValue="DIARIAS"/>
+                    <f:selectItem itemLabel="Semanais" itemValue="SEMANAIS"/>
+                    <f:selectItem itemLabel="Mensais" itemValue="MENSAIS"/>
+                    <f:selectItem itemLabel="Trimestrais" itemValue="TRIMESTRAIS"/>
+                    <f:selectItem itemLabel="Semestrais" itemValue="SEMESTRAIS"/>
+                    <f:selectItem itemLabel="Anuais" itemValue="ANUAIS"/>
+                </h:selectOneMenu>
+                <br/><br/>
+
+                <h:outputLabel for="category" value="Category:"/>
+                <h:selectOneMenu id="category" value="#{taskJSFBean.category}">
+                    <f:selectItem itemLabel="Selecione" itemValue=""/>
+                    <f:selectItem itemLabel="Saúde" itemValue="SAUDE"/>
+                    <f:selectItem itemLabel="Higiene" itemValue="HIGIENE"/>
+                    <f:selectItem itemLabel="Estudos" itemValue="ESTUDOS"/>
+                    <f:selectItem itemLabel="Trabalho" itemValue="TRABALHO"/>
+                    <f:selectItem itemLabel="Família" itemValue="FAMILIA"/>
+                    <f:selectItem itemLabel="Financeiro" itemValue="FINANCEIRO"/>
+                    <f:selectItem itemLabel="Alimentação" itemValue="ALIMENTACAO"/>
+                    <f:selectItem itemLabel="Entretenimento" itemValue="ENTRETENIMENTO"/>
+                    <f:selectItem itemLabel="Espiritual" itemValue="ESPIRITUAL"/>
+                </h:selectOneMenu>
+                <br/><br/>
+
+                <h:commandButton value="Salvar Tarefa" action="#{taskJSFBean.sendTask}"/>
+            </p:tab>
+
+            <!-- Segunda aba -->
+            <p:tab title="Deletar" id="aba2">
+                <p:dataTable value="#{taskJSFBean.items}" var="item"
+                             paginator="true" rows="5"
+                             selection="#{taskJSFBean.selectedTasks}"
+                             selectionMode="multiple"
+                             rowKey="#{item.id}">
+
+                    <p:column selectionMode="multiple" style="width:50px" />
+
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{item.name}" />
+                    </p:column>
+
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{item.description}" />
+                    </p:column>
+
+                    <p:column headerText="Horário">
+                        <h:outputText value="#{item.time}" />
+                    </p:column>
+
+                    <p:column headerText="Periodicidade">
+                        <h:outputText value="#{item.frequency}" />
+                    </p:column>
+
+                    <p:column headerText="Categoria">
+                        <h:outputText value="#{item.category}" />
+                    </p:column>
+                </p:dataTable>
+
+                <p:commandButton value="Excluir Selecionados"
+                                 actionListener="#{taskJSFBean.deleteSelectedTasks}"
+                                 styleClass="ui-button-danger" />
+            </p:tab>
+            <p:tab title="Editar" id="aba3">
+                <p:dataTable value="#{taskJSFBean.items}" var="item"
+                             paginator="true" rows="5" editable="true"
+                             editMode="row"
+                             rowKey="#{item.id}"
+                             rowEditCancelListener="#{taskJSFBean.onRowCancel}">
+                    <p:ajax event="rowEdit" update="@this" listener="#{taskJSFBean.onRowEdit}" />
+                    <p:ajax event="rowEditCancel" update="@this" listener="#{taskJSFBean.onRowCancel}" />
+                    <p:column headerText="Nome">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.name}" /></f:facet>
+                            <f:facet name="input"><h:inputText value="#{item.name}" /></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Descrição">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.description}" /></f:facet>
+                            <f:facet name="input"><h:inputTextarea value="#{item.description}" rows="2" cols="20" /></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Horário">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.time}" /></f:facet>
+                            <f:facet name="input"><h:inputText value="#{item.time}" /></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <h:outputLabel for="category" value="Category:"/>
+
+                    <p:column headerText="Periodicidade">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{item.frequency}" />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <h:selectOneMenu id="frequency" value="#{item.frequency}">
+                                    <f:selectItem itemLabel="Selecione" itemValue=""/>
+                                    <f:selectItem itemLabel="Diárias" itemValue="DIARIAS"/>
+                                    <f:selectItem itemLabel="Semanais" itemValue="SEMANAIS"/>
+                                    <f:selectItem itemLabel="Mensais" itemValue="MENSAIS"/>
+                                    <f:selectItem itemLabel="Trimestrais" itemValue="TRIMESTRAIS"/>
+                                    <f:selectItem itemLabel="Semestrais" itemValue="SEMESTRAIS"/>
+                                    <f:selectItem itemLabel="Anuais" itemValue="ANUAIS"/>
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Categoria">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{item.category}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu id="category" value="#{item.category}">
+                                    <f:selectItem itemLabel="Selecione" itemValue=""/>
+                                    <f:selectItem itemLabel="Saúde" itemValue="SAUDE"/>
+                                    <f:selectItem itemLabel="Higiene" itemValue="HIGIENE"/>
+                                    <f:selectItem itemLabel="Estudos" itemValue="ESTUDOS"/>
+                                    <f:selectItem itemLabel="Trabalho" itemValue="TRABALHO"/>
+                                    <f:selectItem itemLabel="Família" itemValue="FAMILIA"/>
+                                    <f:selectItem itemLabel="Financeiro" itemValue="FINANCEIRO"/>
+                                    <f:selectItem itemLabel="Alimentação" itemValue="ALIMENTACAO"/>
+                                    <f:selectItem itemLabel="Entretenimento" itemValue="ENTRETENIMENTO"/>
+                                    <f:selectItem itemLabel="Espiritual" itemValue="ESPIRITUAL"/>
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <!-- Coluna com os ícones de edição -->
+                    <p:column style="width:100px">
+                        <p:rowEditor />
+                    </p:column>
+                </p:dataTable>
+            </p:tab>
+            <p:tab title="Procurar" id="aba4">
+                <p:dataTable value="#{taskJSFBean.items}" var="item"
+                             paginator="true" rows="5"
+                             filteredValue="#{taskJSFBean.filteredTaskList}"
+                             widgetVar="taskWidget">
+
+                    <p:column headerText="Nome" filterBy="#{item.name}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{item.name}" />
+                    </p:column>
+
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{item.description}" />
+                    </p:column>
+
+                    <p:column headerText="Horário">
+                        <h:outputText value="#{item.time}" />
+                    </p:column>
+
+                    <p:column headerText="Periodicidade" filterBy="#{item.frequency}"
+                              filterMatchMode="exact">
+                        <h:outputText value="#{item.frequency}" />
+                    </p:column>
+
+                    <p:column headerText="Categoria" filterBy="#{item.category}"
+                              filterMatchMode="exact">
+                        <h:outputText value="#{item.category}" />
+                    </p:column>
+                </p:dataTable>>
+            </p:tab>
+        </p:tabView>
+    </h:form>
+</h:body>
+</html>
